@@ -26,3 +26,11 @@ main{
     height: 50rem;
     
 }
+
+.comments {
+    font-size: 3rem;
+}
+
+.comments .comments_list li{
+    font-size: 2rem;
+}
