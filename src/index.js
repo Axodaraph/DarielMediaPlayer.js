@@ -9,7 +9,7 @@ const player = new MediaPlayer({
         new AutoPlay(), new AutoPause()
     ],
 });
-
+//esperemos que modifique
 const playButton = document.querySelector("#play");
 playButton.onclick = () => player.togglePlay();
 
