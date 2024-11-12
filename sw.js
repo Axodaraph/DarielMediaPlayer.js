@@ -22,14 +22,14 @@ self.addEventListener('fetch', event => {
 async function precache () {
     const cache = await caches.open(VERSION);
     return cache.addAll([
-       /*  '/',
+        '/',
         '/index.html',
         '/src/index.js',
         '/src/MediaPlayerInit.js',
         '/plugins/AutoPlay.js',
         '/plugins/AutoPause.js',
         '/assets/index.css',
-        '/assets/Idilio.mp4', */
+        '/assets/Idilio.mp4',
         //ya parcel se encarga de redireccionar
     ]);
 }
