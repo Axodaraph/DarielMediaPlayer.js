@@ -13,7 +13,7 @@ const player = new MediaPlayer({
 const playButton= document.querySelector("#play");
 playButton.onclick = () => player.togglePlay();
 
-const mutted = document.querySelector("#muted"); 
+const muttedButton = document.querySelector("#muted"); 
 muttedButton.onclick = () => {
     if(player.media.muted){
         player.unmute(); //aqui no uso media como en el button de play porque unmute y mute es una funcion definida en player
