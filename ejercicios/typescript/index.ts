@@ -32,3 +32,20 @@ enum Color {
 
 let colorFavarito: Color = Color.Verde;
 console.log(`Mi color favorito es ${colorFavarito}`);
+
+//Funciones
+function add(a: number, b: number): number{
+    return a+b;
+}
+const sum = add(5,10);
+
+//creador de sumas
+function createAdder(a: number){
+    return function(c: number) {
+        return c + a;
+    };
+}
+
+const addFour = createAdder(4);
+const fourPlus6 = addFour(6);
+console.log(fourPlus6);
