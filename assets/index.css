@@ -70,6 +70,8 @@ main{
     width: 100%;
     height: auto;
 }
+
+
 .buttons #muted:hover{
     background-image: radial-gradient(circle, #ff0000, #cc000f, #9b0012, #6a000e, #3d0000);
     color: var(--black);

@@ -7,39 +7,53 @@ interface Subject {
     unsubscribe: (observer: Observer) => void;
 }
 
-class BitcoinPrice implements Subject{
+class BitcoinPrice implements Subject {
     observers: Observer[] = [];
 
-    constructor(){
+    constructor() {
         const el: HTMLInputElement | null = document.querySelector('#value');
-        el.addEventListener('input', () => {
-            this.notify(el.value);
-        })
+        if (el) {
+            el.addEventListener('input', () => {
+                this.notify(el.value);
+            });
+        } else {
+            console.error("Element with id 'value'  not found.");
+        }
+
     }
     subscribe(observer: Observer) {
         this.observers.push(observer);
     }
 
-    unsubscribe(observer: Observer){
+    unsubscribe(observer: Observer) {
         const index = this.observers.findIndex(obs => {
             return obs === observer;
-        })
-        this.observers.splice(index, 1);
+        });
+        if (index !== -1) {
+            this.observers.splice(index, 1);
+        }
+
     }
 
-    notify(data: any){
-        this.observers.forEach(observer => observer.update(data))
+    notify(data: any) {
+        this.observers.forEach(observer => observer.update(data));
     }
 }
 
 class PriceDisplay implements Observer {
     private el: HTMLElement | null;
-    constructor(){
+    constructor() {
         this.el = document.querySelector("#price");
+        if (!this.el) {
+            console.error("Element with id 'price' not found.");
+        }
     }
-    
+
     update(data: any) {
-        this.el.innerText = data;
+        if (this.el) {
+            this.el.innerText = data;
+        }
+
     }
 }
 
@@ -49,5 +63,5 @@ const display = new PriceDisplay();
 value.subscribe(display);
 
 setTimeout(
-() => value.unsubscribe(display),2000
+    () => value.unsubscribe(display), 5000
 );
