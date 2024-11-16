@@ -30,6 +30,7 @@ async function precache () {
         '/plugins/AutoPause.js',
         '/assets/index.css',
         '/assets/Idilio.mp4',
+        //ya parcel se encarga de redireccionar
     ]);
 }
 

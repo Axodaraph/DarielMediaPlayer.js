@@ -1,4 +1,7 @@
 node_modules/
 *.json
+<<<<<<< HEAD
 *.cache
+=======
+>>>>>>> origin/master
 dist
