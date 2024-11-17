@@ -49,14 +49,14 @@ class Ads {
     }
 
     private initAds(){
-        this.ads = [...ALL_ADS];
+        this.ads = [ ... ALL_ADS];
     }
 
     getAd(){
         if(this.ads.length === 0){
             this.initAds();
         }
-        this.ads.pop();
+        return this.ads.pop();
 
     }
 }

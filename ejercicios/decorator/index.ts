@@ -40,7 +40,7 @@ function EmailFieldDecorator(field: Field): Field{
     field.validate = function(){
         validate();
         let value = field.input.value;
-        if(value.indexOf("@.gmail") === -1){
+        if(value.indexOf("@.gmail.com") === -1){
             field.errors.push('Debe ser un email');
 
         }

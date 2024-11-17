@@ -127,9 +127,28 @@ var MediaPlayer = /** @class */function () {
   function MediaPlayer(config) {
     this.media = config.el;
     this.plugins = config.plugins || [];
+    this.initPlayer();
     this.initPlugins();
   }
+  MediaPlayer.prototype.initPlayer = function () {
+    var _a;
+    this.container = document.createElement('div');
+    this.container.style.position = 'relative';
+    (_a = this.media.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(this.container, this.media);
+    this.container.appendChild(this.media);
+  };
   MediaPlayer.prototype.initPlugins = function () {
+    /*  const player = {
+         play: () => this.play(),
+         pause: () => this.pause(),
+         media: this.media,
+         get muted() {
+             return this.media.muted;
+         },
+           set muted(value) {
+             this.media.muted = value;
+         }
+     }; */
     var _this = this;
     this.plugins.forEach(function (plugin) {
       plugin.run(_this);
@@ -224,7 +243,130 @@ var AutoPause = /** @class */function () {
   return AutoPause;
 }();
 exports.default = AutoPause;
-},{}],"src/index.ts":[function(require,module,exports) {
+},{}],"plugins/Ads/Ads.ts":[function(require,module,exports) {
+"use strict";
+
+var __spreadArray = this && this.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var ALL_ADS = [{
+  imageUrl: 'https://static.platzi.com/cdn-cgi/image/width=1024,quality=50,format=auto/media/achievements/badge-curso-frontend-developer-825407d1-49b1-4c9b-90c4-eee793720ede.png',
+  title: 'Curso de Frontend Developer',
+  body: 'Aprende a crear la parte frontal de una pagina web desde cero',
+  url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fplatzi.com%2Fcursos%2Ffrontend-developer%2F&psig=AOvVaw2Mk0cF0TlbT961ZcPecGmW&ust=1731857255823000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDFi5mV4YkDFQAAAAAdAAAAABAE'
+}, {
+  imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlejFDgINrAaFx9cRCaYstxO2J0jNC7YRrnA&s',
+  title: 'Curso Profesional de Javascript',
+  body: 'Aprende a crear la parte frontal de una pagina web desde cero',
+  url: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fplatzi.com%2Fblog%2Fjschallenge%2F&psig=AOvVaw0GaD1ha050v5GVPUFA61_f&ust=1731858312472000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCNiNg46Z4YkDFQAAAAAdAAAAABAE'
+}, {
+  imageUrl: 'https://static.platzi.com/cdn-cgi/image/width=1024,quality=50,format=auto/media/achievements/badge-curso-frontend-developer-825407d1-49b1-4c9b-90c4-eee793720ede.png',
+  title: 'Curso mySQL',
+  body: 'Aprende a crear la parte frontal de una pagina web desde cero',
+  url: 'https://platzi.com/home/clases/9873-db-sql/69931-el-poder-de-los-datos/'
+}];
+var Ads = /** @class */function () {
+  function Ads() {
+    this.initAds();
+  }
+  Ads.getInstance = function () {
+    if (!Ads.instance) {
+      Ads.instance = new Ads();
+    }
+    return Ads.instance;
+  };
+  Ads.prototype.initAds = function () {
+    this.ads = __spreadArray([], ALL_ADS, true);
+  };
+  Ads.prototype.getAd = function () {
+    if (this.ads.length === 0) {
+      this.initAds();
+    }
+    return this.ads.pop();
+  };
+  return Ads;
+}();
+exports.default = Ads;
+},{}],"plugins/Ads/ratatata.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Ads_1 = __importDefault(require("./Ads"));
+var AdsPlugin = /** @class */function () {
+  function AdsPlugin() {
+    this.media = null; // Permite null
+    this.ads = Ads_1.default.getInstance();
+    this.adsContainer = document.createElement('div');
+    this.adsContainer.style.position = 'absolute';
+    this.timeupdateHandler = this.handleTimeUpdate.bind(this);
+  }
+  AdsPlugin.prototype.run = function (player) {
+    this.player = player;
+    this.player.container.appendChild(this.adsContainer);
+    this.media = this.player.media || null; // Manejo de null
+    if (this.media) {
+      this.media.addEventListener('timeupdate', this.timeupdateHandler);
+    } else {
+      console.error("El elemento media es nulo.");
+    }
+  };
+  AdsPlugin.prototype.destroy = function () {
+    if (this.media) {
+      this.media.removeEventListener('timeupdate', this.timeupdateHandler);
+      this.media = null; // Limpia la referencia
+    }
+  };
+  AdsPlugin.prototype.handleTimeUpdate = function () {
+    if (this.media) {
+      // Verifica si media es válido
+      var currentTime = this.media.currentTime; // No necesita Math.floor para este caso.  Se puede usar para mayor precisión si es necesario.
+      if (Math.abs(currentTime % 30) < 0.5) {
+        // Chequea si está cercano a un múltiplo de 30.
+        this.renderAd();
+      }
+    }
+  };
+  AdsPlugin.prototype.renderAd = function () {
+    var _this = this;
+    if (this.currentAd) {
+      return;
+    }
+    var ad = this.ads.getAd();
+    this.currentAd = ad;
+    this.adsContainer.innerHTML = "\n        <div class=\"ads\" style=\"display: flex;\n        width: 300px;\n        height: 100px;\">\n                <a class=\"ads__link\" href=\"".concat(this.currentAd.url, "\"  target=\"_blank\" style=\"display: flex;\n                flex-direction: row;\n                justify-content: space-between;\n                width: auto;\n                height: auto;\">\n                    <img class=\"ads__img\" src=\"").concat(this.currentAd.imageUrl, "\" alt=\"\" style =\"width: 100px;\n                    height: 100px;\">\n                    <div class=\"ads__info\">\n                        <h5 class=\"ads__title\">").concat(this.currentAd.title, "</h5>\n                        <p class=\"ads__body\">").concat(this.currentAd.body, "</p>\n                    </div>\n                </a>\n            </div>");
+    setTimeout(function () {
+      _this.currentAd = null;
+      _this.adsContainer.innerHTML = '';
+    }, 5000);
+    if (ad) {
+      // Aquí va la lógica para mostrar el anuncio en el reproductor.
+      // Ejemplo (requiere implementar una función para mostrar anuncios en el reproductor):
+      console.log(ad);
+      /* this.player.showAd(ad); */
+    } else {
+      console.warn("No hay anuncio disponible.");
+    }
+  };
+  return AdsPlugin;
+}();
+exports.default = AdsPlugin;
+},{"./Ads":"plugins/Ads/Ads.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -238,29 +380,38 @@ Object.defineProperty(exports, "__esModule", {
 var MediaPlayerInit_1 = __importDefault(require("./MediaPlayerInit"));
 var AutoPlay_1 = __importDefault(require("../plugins/AutoPlay"));
 var AutoPause_1 = __importDefault(require("../plugins/AutoPause"));
+var ratatata_1 = __importDefault(require("../plugins/Ads/ratatata"));
 var video = document.querySelector("video");
 var player = new MediaPlayerInit_1.default({
   el: video,
-  plugins: [new AutoPlay_1.default(), new AutoPause_1.default()]
+  plugins: [new AutoPlay_1.default(), new AutoPause_1.default(), new ratatata_1.default()]
 });
 var playButton = document.querySelector("#play");
-playButton.onclick = function () {
-  return player.togglePlay();
-};
+if (playButton) {
+  playButton.onclick = function () {
+    return player.togglePlay();
+  };
+} else {
+  console.error('problemas con el boton de play');
+}
 var muttedButton = document.querySelector("#muted");
-muttedButton.onclick = function () {
-  if (player.media.muted) {
-    player.unmute(); //aqui no uso media como en el button de play porque unmute y mute es una funcion definida en player
-  } else {
-    player.mute();
-  }
-};
+if (muttedButton) {
+  muttedButton.onclick = function () {
+    if (player.media.muted) {
+      player.unmute(); //aqui no uso media como en el button de play porque unmute y mute es una funcion definida en player
+    } else {
+      player.mute();
+    }
+  };
+} else {
+  console.error('el boton de muteado esta presentado errores');
+}
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register("/sw.js").catch(function (error) {
     console.log(error.message);
   });
 }
-},{"./MediaPlayerInit":"src/MediaPlayerInit.ts","../plugins/AutoPlay":"plugins/AutoPlay.ts","../plugins/AutoPause":"plugins/AutoPause.ts","C:\\Users\\User\\Proyectos_Js\\new\\DarielMediaPlayer.js\\sw.js":[["sw.js","sw.js"],"sw.js.map","sw.js"]}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./MediaPlayerInit":"src/MediaPlayerInit.ts","../plugins/AutoPlay":"plugins/AutoPlay.ts","../plugins/AutoPause":"plugins/AutoPause.ts","../plugins/Ads/ratatata":"plugins/Ads/ratatata.ts","C:\\Users\\User\\Proyectos_Js\\PlatziMediaPlayer.js\\sw.js":[["sw.js","sw.js"],"sw.js.map","sw.js"]}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -285,7 +436,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53612" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57256" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

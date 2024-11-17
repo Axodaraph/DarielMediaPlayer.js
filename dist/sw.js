@@ -137,8 +137,16 @@ self.addEventListener('fetch', event => {
 });
 async function precache() {
   const cache = await caches.open(VERSION);
-  return cache.addAll(['/', '/index.html', '/src/index.js', '/src/MediaPlayerInit.js', '/plugins/AutoPlay.js', '/plugins/AutoPause.js', '/assets/index.css', '/assets/Idilio.mp4'
-  //ya parcel se encarga de redireccionar
+  return cache.addAll([
+    /* '/',
+    '/index.html',
+    '/src/index.js',
+    '/src/MediaPlayerInit.js',
+    '/plugins/AutoPlay.js',
+    '/plugins/AutoPause.js',
+    '/assets/index.css',
+    '/assets/Idilio.mp4', */
+    //ya parcel se encarga de redireccionar
   ]);
 }
 async function cachedResponse(request) {
@@ -176,7 +184,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57043" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57256" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
