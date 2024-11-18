@@ -2,7 +2,7 @@
   "name": "@axodaraph/platzimediaplayer",
   "version": "1.0.0",
   "description": "",
-  "main": "MediaPlayerInit.ts",
+  "main": ";ib/MediaPlayerInit.js",
   "scripts": {
     "build": "tsc src/MediaPlayerInit.ts src/plugins/AutoPause.ts src/plugins/AutoPlay.ts src/plugins/Ads/Ads.ts src/plugins/Ads/ratatata.ts --outDir lib",
     "test": "echo \"Error: no test specified\" && exit 1"
