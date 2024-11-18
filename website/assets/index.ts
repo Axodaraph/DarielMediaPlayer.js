@@ -1,7 +1,7 @@
-import MediaPlayer from '../../mediaplayer/src/MediaPlayerInit';
-import AutoPlay from '../../mediaplayer/src/plugins/AutoPlay';
-import AutoPause from '../../mediaplayer/src/plugins/AutoPause';
-import Ads from '../../mediaplayer/src/plugins/Ads/ratatata';
+import MediaPlayer from '@axodaraph/platzimediaplayer/lib/MediaPlayerInit';
+import AutoPlay from '@axodaraph/platzimediaplayer/lib/plugins/AutoPlay';
+import AutoPause from '@axodaraph/platzimediaplayer/lib/plugins/AutoPause';
+import Ads from '@axodaraph/platzimediaplayer/lib/plugins/Ads/ratatata';
 
 const video = document.querySelector("video");
 const player = new MediaPlayer({
